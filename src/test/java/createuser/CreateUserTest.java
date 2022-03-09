@@ -1,24 +1,23 @@
 package createuser;
 
 import org.junit.Test;
+
 import stellarburgers.api.UserClient;
 import stellarburgers.api.model.User;
 
-public class CreateUserTest {
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-  private UserClient userClient;
+public class CreateUserTest {
+    //Создать userClient
+    private UserClient userClient = new UserClient();
 
   @Test
   //создать уникального пользователя
   public void userCanBeRegisterWithUniqueCredentials(){
       //Создать объект user - экземпляр класса со случайными данными
       User user = User.getRandomUser();
-      System.out.println(user.getEmail());
-      System.out.println(user.getPassword());
-      System.out.println(user.getName());
-      //boolean isUserRegistered = userClient.create(user);
-      //System.out.println(isUserRegistered);
-
+      boolean isUserRegistered = userClient.create(user);
+      //Проверить, что в ответе success: true, если нет - вывести сообщение
+      assertTrue(isUserRegistered, "User not created");
   }
-
 }

@@ -1,5 +1,7 @@
 package stellarburgers.api.model;
 
+import com.github.javafaker.Faker;
+
 public class User {
     private String email;
     private String password;
@@ -12,6 +14,14 @@ public class User {
     }
 
     public User() {
+    }
+    //Сгенерируем случайные данные юзера
+    public static User getRandomUser(){
+        Faker faker = new Faker();
+        String email = faker.internet().emailAddress();
+        String password = faker.lorem().characters(8, true);
+        String name = faker.name().firstName();
+    return new User (email, password, name);
     }
 
     public String getEmail() {

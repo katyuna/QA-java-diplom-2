@@ -1,19 +1,23 @@
 package stellarburgers.api;
 
-import pojo.User;
-import pojo.UserCredentials;
+import stellarburgers.api.model.User;
+import stellarburgers.api.model.UserCredentials;
 
 import static io.restassured.RestAssured.given;
 
-public class UserClient {
+//Выносим общую часть URL в отдельный класс RestClient и наследуем от него класс UserClient
+public class UserClient extends RestClient{
+
+    public final String PATH = BASE_URL+"auth/";  //URL
     //Метод регистрации нового пользователя
     public boolean create(User user){
         return given()
-                .header("Content-type", "application/json")
+                //при создании юзера использовать базовую спецификацию, которая описана в RestClient
+                .spec(getBaseSpec())
                 .and()
                 .body(user)
                 .when()
-                .post("https://stellarburgers.nomoreparties.site/api/auth/register")
+                .post(PATH+"register")
                 .then()
                 .assertThat().statusCode(200)
                 .extract()
@@ -23,11 +27,12 @@ public class UserClient {
     //Метод авторизации пользователя
     public String login(UserCredentials userCredettials){
         return given()
-                .header("Content-type", "application/json")
+                //при авторизхации юзера использовать базовую спецификацию, которая описана в RestClient
+                .spec(getBaseSpec())
                 .and()
                 .body(userCredettials)
                 .when()
-                .post("https://stellarburgers.nomoreparties.site/api/auth/login")
+                .post(PATH+"login")
                 .then()
                 .assertThat().statusCode(200)
                 .extract()

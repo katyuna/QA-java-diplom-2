@@ -1,4 +1,4 @@
-package pojo;
+package stellarburgers.api.model;
 
 public class UserCredentials {
     private String email;

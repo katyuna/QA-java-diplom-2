@@ -7,14 +7,21 @@ public class User {
     private String password;
     private String name;
 
+    //Конструкторы
+    public User() {
+    }
+
     public User(String email, String password, String name) {
         this.email = email;
         this.password = password;
         this.name = name;
     }
 
-    public User() {
+    public User(String email, String password) {
+        this.email = email;
+        this.password = password;
     }
+
     //Сгенерируем случайные данные юзера
     public static User getRandomUser(){
         Faker faker = new Faker();
@@ -23,6 +30,14 @@ public class User {
         String name = faker.name().firstName();
     return new User (email, password, name);
     }
+
+    public static User getUserWithoutName(){
+        Faker faker = new Faker();
+        String email = faker.internet().emailAddress();
+        String password = faker.lorem().characters(8, true);
+        return new User (email, password);
+    }
+
 
     public String getEmail() {
         return email;

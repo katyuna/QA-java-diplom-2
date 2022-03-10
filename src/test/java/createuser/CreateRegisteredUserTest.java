@@ -17,10 +17,25 @@ public class CreateRegisteredUserTest {
     @Description("Create user which already exist and check answer that code 403 and success is false")
     public void userCantBeRegisterWithSameCredentials() {
 
-        //зарегистрировать пользователя и получить его токен
+        //создать объект - пользователь
         User user = User.getRandomUser();
+        //Зарегистрировать пользователя со случайными данными
         Response responseRegisterUser = userClient.create(user);
-        String token = responseRegisterUser
+        //Зарегистрировать пользователя с этими же данными повторно
+        Response responseRegisterTheSameUser = userClient.create(user);
+
+        boolean isUserNotRegistered = responseRegisterTheSameUser
+                .then()
+                .assertThat().statusCode(403)
+                .extract()
+                .path("success");
+        //проверить, что  код ответа 403 Forbidden и "success": false,
+        // если нет - вывести сообщение
+        assertFalse(isUserNotRegistered, "User is created");
+
+
+
+        /*String token = responseRegisterUser
                 .then()
                 .extract()
                 .path("accessToken");
@@ -35,19 +50,19 @@ public class CreateRegisteredUserTest {
         String name = responseGetUserInfo
                 .then()
                 .extract()
-                .path("user.name");
+                .path("user.name");*/
 
         //зарегистрировать пользователя с полученными данными и любым паролем
-        User sameUser = new User(email, "password", name);
-        Response responseTheSameUser = userClient.create(sameUser);
+        //User sameUser = new User(email, "password", name);
+       // Response responseTheSameUser = userClient.create(sameUser);
 
         //проверить, что  код ответа 403 Forbidden и "success": false,
         // если нет - вывести сообщение
-        boolean isUserNotRegistered = responseTheSameUser
+       /* boolean isUserNotRegistered = responseTheSameUser
                 .then()
                 .assertThat().statusCode(403)
                 .extract()
                 .path("success");
-        assertFalse(isUserNotRegistered, "User is created");
+        assertFalse(isUserNotRegistered, "User is created");*/
     }
 }

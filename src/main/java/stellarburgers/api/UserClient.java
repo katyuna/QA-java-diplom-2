@@ -14,7 +14,7 @@ public class UserClient extends RestClient{
     public final String PATH = BASE_URL+"auth/";  //URL
 
     //Регистрация
-    @Step("Create user {user}")
+    @Step("Create user")
     public Response create(User user){
         return given()
                 //при создании юзера использовать базовую спецификацию, которая описана в RestClient
@@ -35,19 +35,15 @@ public class UserClient extends RestClient{
                 .get(PATH+"user");
     }
 
-    //Авторизация ПЕРЕДЕЛАТЬ
-    @Step("Login user {userCredentials}")
-    public String login(UserCredentials userCredentials){
+    //Авторизация
+    @Step("Login user")
+    public Response loginUser(UserCredentials userCredentials){
         return given()
                 //при авторизации юзера использовать базовую спецификацию, которая описана в RestClient
                 .spec(getBaseSpec())
                 .and()
                 .body(userCredentials)
                 .when()
-                .post(PATH+"login")
-                .then()
-                .assertThat().statusCode(200)
-                .extract()
-                .path("accessToken");
+                .post(PATH+"login");
     }
 }

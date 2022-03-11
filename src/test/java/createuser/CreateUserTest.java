@@ -22,7 +22,7 @@ public class CreateUserTest {
   public void userCanBeRegisterWithUniqueCredentials(){
       //Создать объект user - экземпляр класса со случайными данными
       User user = User.getRandomUser();
-      //Вызвать метод создания пользователя и и из ответа созхранить значение по ключу success
+      //Вызвать метод создания пользователя и из ответа созхранить значение по ключу success
       Response response = userClient.create(user);
       boolean isUserRegistered = response
         .then()
@@ -31,5 +31,15 @@ public class CreateUserTest {
         .path("success");
       //Проверить, что в ответе success: true, если нет - вывести сообщение
         assertTrue(isUserRegistered, "User not created");
+        /* КОММЕНТАРИЙ ДЛЯ РЕВЬЮЕРА
+        1) Наличие токена в ответе в этом тесте не проверяю т.к.
+        при его отсутвии при запуске тестов провалится тест на авторизацию
+        и причину бага искать исходяиз падения теста авторизации.
+        СМ. КОММЕНТАРИЙ В LoginRegisteredUserTest
+        2) Момен про удаление тестовых данных после теста
+        обсудила с наставиником
+        "Поскольку методов в официальной документации не описано,
+        сейчас ты можешь пока опустить этот шаг."
+         */
   }
 }

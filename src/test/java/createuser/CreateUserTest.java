@@ -8,6 +8,7 @@ import org.junit.Test;
 import stellarburgers.api.UserClient;
 import stellarburgers.api.model.User;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class CreateUserTest {
@@ -31,12 +32,20 @@ public class CreateUserTest {
         .path("success");
       //Проверить, что в ответе success: true, если нет - вывести сообщение
         assertTrue(isUserRegistered, "User not created");
+        //Проверить наличие токена в ответе (См комметарий для ревьюера)
+      String token = response
+              .then()
+              .extract()
+              .path("accessToken");
+      String clearToken = token.replace("Bearer ", "");
+      assertFalse(clearToken.isEmpty());
+
         /* КОММЕНТАРИЙ ДЛЯ РЕВЬЮЕРА
-        1) Наличие токена в ответе в этом тесте не проверяю т.к.
-        при его отсутвии при запуске тестов провалится тест на авторизацию
-        и причину бага искать исходяиз падения теста авторизации.
-        СМ. КОММЕНТАРИЙ В LoginRegisteredUserTest
-        2) Момен про удаление тестовых данных после теста
+        1) Дополнительно проверим наличие токена т.к.
+        приходит токен или нет - зависит от конкретной реализации API,
+        нужно смотреть в код, чтобы понять как написано API и мождет быть, что в каком-то
+        конкретном случае неп приходит то,ь что должно приходить по стандартным соглашеничям
+        2) Момент про удаление тестовых данных после теста
         обсудила с наставиником
         "Поскольку методов в официальной документации не описано,
         сейчас ты можешь пока опустить этот шаг."

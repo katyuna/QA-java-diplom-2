@@ -8,6 +8,7 @@ import stellarburgers.api.UserClient;
 import stellarburgers.api.model.User;
 import stellarburgers.api.model.UserCredentials;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class LoginRegisteredUserTest {
@@ -36,5 +37,12 @@ public class LoginRegisteredUserTest {
                 .path("success");
         //Проверить, что в ответе success: true, если нет - вывести сообщение
         assertTrue(isUserLoggedIn, "User not created");
+        //Проверить наличие токена в ответе
+        String token = responseLoginUser
+                .then()
+                .extract()
+                .path("accessToken");
+        String clearToken = token.replace("Bearer ", "");
+        assertFalse(clearToken.isEmpty());
     }
 }

@@ -3,10 +3,12 @@ package changeuserdata;
 import io.qameta.allure.Description;
 import io.qameta.allure.junit4.DisplayName;
 import io.restassured.response.Response;
-import org.junit.Assert;
 import org.junit.Test;
 import stellarburgers.api.UserClient;
 import stellarburgers.api.model.User;
+
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertTrue;
 
 public class ChangeUserDataWithAuthTest {
     //Создать userClient
@@ -31,6 +33,13 @@ public class ChangeUserDataWithAuthTest {
         User userForEditInfo = User.getRandomUser();
         //Изменить данные пользователя, используя токен из responseRegisterUser и новые данные пользователя
         Response responseEditUserInfo = userClient.editUserInfo(clearToken,userForEditInfo);
+
+        boolean isDataChanged =
+                responseEditUserInfo
+                        .then()
+                        .extract()
+                        .path("success");
+
         String name = responseEditUserInfo
                 .then()
                 .extract()
@@ -41,8 +50,9 @@ public class ChangeUserDataWithAuthTest {
                 .extract()
                 .path("user.email");
 
-        Assert.assertNotEquals(user.getName(), name);
-        Assert.assertNotEquals(user.getEmail(), email);
+        assertTrue(isDataChanged);
+        assertNotEquals(user.getName(), name);
+        assertNotEquals(user.getEmail(), email);
 
         }
     }

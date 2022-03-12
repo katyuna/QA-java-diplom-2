@@ -46,7 +46,7 @@ public class UserClient extends RestClient{
                 .get(PATH+"user");
     }
 
-    //Обновлпение данных пользователя
+    //Обновлпение данных пользователя с авторизацией
     @Step("Edit user data")
     public Response editUserInfo(String token, User user){
         return given()

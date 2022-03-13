@@ -3,6 +3,7 @@ package createorder;
 import io.qameta.allure.Description;
 import io.qameta.allure.junit4.DisplayName;
 import io.restassured.response.Response;
+import io.restassured.response.ValidatableResponse;
 import org.junit.Test;
 import stellarburgers.api.OrderClient;
 import stellarburgers.api.UserClient;
@@ -13,7 +14,7 @@ import java.util.ArrayList;
 
 import static org.junit.Assert.*;
 
-public class CreateOrderWithAuth {
+public class CreateOrderWithAuthNoIngredients {
 
     //Создать userClient
     private UserClient userClient = new UserClient();
@@ -22,8 +23,8 @@ public class CreateOrderWithAuth {
     private OrderClient orderClient = new OrderClient();
 
     @Test
-    @DisplayName("Create order with auth")
-    @Description("Create order with auth and check answer that code is 200 success is true")
+    @DisplayName("Create order with auth and without ingredients")
+    @Description("Create order without ingredients and check answer that code is 400")
 
     public void orderCanBeCreatedWithAuth() {
         //Создать данные и зарегистрировать пользователя
@@ -36,35 +37,20 @@ public class CreateOrderWithAuth {
                 .path("accessToken");
         String clearToken = token.replace("Bearer ", "");
 
-        //Получить список ингридиентов
+        //Создать пустой список ингредиентов
+        ArrayList<String> ingredientsInOrderIsEmpty= new ArrayList<>();
 
-        Response responseGetIngredients = orderClient.getIngredients(clearToken);
-        ArrayList <String> ingredients = responseGetIngredients
-                .then()
-                .extract()
-                .path("data._id");
+        //Создать объект ingredientsInOrder (нет ингридиентов)
+        Ingredients ingredientsInOrder = new Ingredients(ingredientsInOrderIsEmpty);
 
-        //Создать объект ingredientsInOrder
-        Ingredients ingredientsInOrder = new Ingredients(ingredients);
-        //Создать заказ из ингридиеднтов
+        //Создать заказ без ингридиеднтов
         Response responseCreateOrder = orderClient.createOrder(clearToken, ingredientsInOrder);
-        //Извлечь из ответа значение по ключу success
-        boolean isOrderCreated = responseCreateOrder
+//Проверить код ответа 400 и "success": false
+        boolean isOrderNotCreated = responseCreateOrder
                 .then()
-                .assertThat().statusCode(200)
+                .assertThat().statusCode(400)
                 .extract()
                 .path("success");
-
-        //Извлечь из ответа номер заказа
-        int orderNumber = responseCreateOrder
-                .then()
-                .extract()
-                .path("order.number");
-
-        //Проверить "success": true
-        assertTrue(isOrderCreated);
-        //Проверить, что заказу присвоен номер
-        assertNotNull(orderNumber);
-
-    }
+        assertFalse(isOrderNotCreated);
+     }
  }

@@ -6,9 +6,12 @@ import io.restassured.response.Response;
 import org.junit.Test;
 import stellarburgers.api.OrderClient;
 import stellarburgers.api.UserClient;
+import stellarburgers.api.model.Ingredients;
 import stellarburgers.api.model.User;
 
 import java.util.ArrayList;
+
+import static org.junit.Assert.*;
 
 public class CreateOrderWithAuth {
 
@@ -22,7 +25,7 @@ public class CreateOrderWithAuth {
     @DisplayName("Create order with auth")
     @Description("Create order with auth and check answer that code is 200 success is true")
 
-    public void CreateOrderCanBeCreatedWithAuth() {
+    public void orderCanBeCreatedWithAuth() {
         //Создать данные и зарегистрировать пользователя
         User user = User.getRandomUser();
         Response responseRegisterUser = userClient.create(user);
@@ -32,22 +35,36 @@ public class CreateOrderWithAuth {
                 .extract()
                 .path("accessToken");
         String clearToken = token.replace("Bearer ", "");
+
         //Получить список ингридиентов
+
         Response responseGetIngredients = orderClient.getIngredients(clearToken);
-        ArrayList<String> ingredients = responseGetIngredients
+        ArrayList <String> ingredients = responseGetIngredients
                 .then()
                 .extract()
                 .path("data._id");
-        System.out.println(ingredients);
+
+        //Создать объект ingredientsInOrder
+        Ingredients ingredientsInOrder = new Ingredients(ingredients);
         //Создать заказ из ингридиеднтов
-        Response responseCreateOrder = orderClient.createOrder(clearToken, ingredients);
-        System.out.println();
-
-
+        Response responseCreateOrder = orderClient.createOrder(clearToken, ingredientsInOrder);
+        //Извлечь из ответа значение по ключу success
         boolean isOrderCreated = responseCreateOrder
                 .then()
+                .assertThat().statusCode(200)
                 .extract()
                 .path("success");
-        System.out.println(isOrderCreated);
+
+        //Извлечь из ответа номер заказа
+        int orderNumber = responseCreateOrder
+                .then()
+                .extract()
+                .path("order.number");
+
+        //Проверить "success": true
+        assertTrue(isOrderCreated);
+        //Проверить, что заказу присвоен номер
+        assertNotNull(orderNumber);
+
     }
  }

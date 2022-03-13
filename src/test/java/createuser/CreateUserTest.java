@@ -23,7 +23,7 @@ public class CreateUserTest {
   public void userCanBeRegisterWithUniqueCredentials(){
       //Создать объект user - экземпляр класса со случайными данными
       User user = User.getRandomUser();
-      //Вызвать метод создания пользователя и из ответа созхранить значение по ключу success
+      //Вызвать метод создания пользователя и из ответа сохранить значение по ключу success
       Response response = userClient.create(user);
       boolean isUserRegistered = response
         .then()

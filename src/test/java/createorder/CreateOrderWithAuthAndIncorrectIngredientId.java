@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-public class CreateOrderNoAuthAndWithIngredients {
+public class CreateOrderWithAuthAndIncorrectIngredientId {
 
     //Создать userClient
     private UserClient userClient = new UserClient();
@@ -23,14 +23,10 @@ public class CreateOrderNoAuthAndWithIngredients {
     private OrderClient orderClient = new OrderClient();
 
     @Test
-    @DisplayName("Create order without auth")
-    @Description("Create order without auth and check answer that code is 401 success is false")
+    @DisplayName("Create order with auth and incorrect ingredients id")
+    @Description("Create order with auth and check answer that code is 500")
 
-    public void orderCanBeCreatedWithoutAuth() {
-        /*КОММЕНТАРИЙ ДЛЯ РЕВЬЮЕРА
-        через фронт нет возможности создать заказ, предварительно не авторизовавашись, но
-        при обращении напрямую к API заказ создается (перепроверено в Postman)
-         */
+    public void orderCanBeCreatedWithAuth() {
         //Создать данные и зарегистрировать пользователя
         User user = User.getRandomUser();
         Response responseRegisterUser = userClient.create(user);
@@ -48,26 +44,16 @@ public class CreateOrderNoAuthAndWithIngredients {
                 .extract()
                 .path("data._id");
 
+        //Изменить первый элемент списка на некорректный
+        String incorrectID = ingredients.set(0,"123");
+
         //Создать объект ingredientsInOrder
         Ingredients ingredientsInOrder = new Ingredients(ingredients);
-        //Создать заказ из ингридиеднтов без токена (без авторизации)
-        Response responseCreateOrder = orderClient.createOrder("", ingredientsInOrder);
-        //Извлечь из ответа значение по ключу success
-        boolean isOrderCreated = responseCreateOrder
+        //Создать заказ из ингридиеднтов
+        Response responseCreateOrder = orderClient.createOrder(clearToken, ingredientsInOrder);
+        //Проверить код ответа 500
+       responseCreateOrder
                 .then()
-                .assertThat().statusCode(200)
-                .extract()
-                .path("success");
-
-        //Извлечь из ответа номер заказа
-        int orderNumber = responseCreateOrder
-                .then()
-                .extract()
-                .path("order.number");
-
-        //Проверить "success": true
-        assertTrue(isOrderCreated);
-        //Проверить, что заказу присвоен номер
-        assertNotNull(orderNumber);
+                .assertThat().statusCode(500);
     }
  }

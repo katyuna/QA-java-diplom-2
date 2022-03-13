@@ -31,4 +31,13 @@ public class OrderClient extends RestClient {
                 .when()
                 .post(PATH);
     }
+
+    //Получение заказов конкретного пользователя
+    @Step("Get user orders")
+    public Response getUserOrders(String token) {
+        return given()
+                .spec(getBaseSpec())
+                .auth().oauth2(token)
+                .get(PATH);
+    }
 }

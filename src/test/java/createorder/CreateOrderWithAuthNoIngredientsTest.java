@@ -3,7 +3,6 @@ package createorder;
 import io.qameta.allure.Description;
 import io.qameta.allure.junit4.DisplayName;
 import io.restassured.response.Response;
-import io.restassured.response.ValidatableResponse;
 import org.junit.Test;
 import stellarburgers.api.OrderClient;
 import stellarburgers.api.UserClient;
@@ -14,7 +13,7 @@ import java.util.ArrayList;
 
 import static org.junit.Assert.*;
 
-public class CreateOrderWithAuthNoIngredients {
+public class CreateOrderWithAuthNoIngredientsTest {
 
     //Создать userClient
     private UserClient userClient = new UserClient();

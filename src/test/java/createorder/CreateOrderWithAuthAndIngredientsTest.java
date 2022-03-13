@@ -11,10 +11,9 @@ import stellarburgers.api.model.User;
 
 import java.util.ArrayList;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
-public class CreateOrderNoAuthAndWithIngredients {
+public class CreateOrderWithAuthAndIngredientsTest {
 
     //Создать userClient
     private UserClient userClient = new UserClient();
@@ -23,14 +22,10 @@ public class CreateOrderNoAuthAndWithIngredients {
     private OrderClient orderClient = new OrderClient();
 
     @Test
-    @DisplayName("Create order without auth")
-    @Description("Create order without auth and check answer that code is 401 success is false")
+    @DisplayName("Create order with auth")
+    @Description("Create order with auth and check answer that code is 200 success is true")
 
-    public void orderCanBeCreatedWithoutAuth() {
-        /*КОММЕНТАРИЙ ДЛЯ РЕВЬЮЕРА
-        через фронт нет возможности создать заказ, предварительно не авторизовавашись, но
-        при обращении напрямую к API заказ создается (перепроверено в Postman)
-         */
+    public void orderCanBeCreatedWithAuth() {
         //Создать данные и зарегистрировать пользователя
         User user = User.getRandomUser();
         Response responseRegisterUser = userClient.create(user);
@@ -42,6 +37,7 @@ public class CreateOrderNoAuthAndWithIngredients {
         String clearToken = token.replace("Bearer ", "");
 
         //Получить список ингридиентов
+
         Response responseGetIngredients = orderClient.getIngredients(clearToken);
         ArrayList <String> ingredients = responseGetIngredients
                 .then()
@@ -50,8 +46,8 @@ public class CreateOrderNoAuthAndWithIngredients {
 
         //Создать объект ingredientsInOrder
         Ingredients ingredientsInOrder = new Ingredients(ingredients);
-        //Создать заказ из ингридиеднтов без токена (без авторизации)
-        Response responseCreateOrder = orderClient.createOrder("", ingredientsInOrder);
+        //Создать заказ из ингридиеднтов
+        Response responseCreateOrder = orderClient.createOrder(clearToken, ingredientsInOrder);
         //Извлечь из ответа значение по ключу success
         boolean isOrderCreated = responseCreateOrder
                 .then()
@@ -69,5 +65,6 @@ public class CreateOrderNoAuthAndWithIngredients {
         assertTrue(isOrderCreated);
         //Проверить, что заказу присвоен номер
         assertNotNull(orderNumber);
+
     }
  }

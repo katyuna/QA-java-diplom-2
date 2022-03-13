@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-public class CreateOrderWithAuthAndIncorrectIngredientId {
+public class CreateOrderWithAuthAndIncorrectIngredientIdTest {
 
     //Создать userClient
     private UserClient userClient = new UserClient();

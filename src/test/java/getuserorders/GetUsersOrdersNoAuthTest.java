@@ -21,7 +21,7 @@ public class GetUsersOrdersNoAuthTest {
     @DisplayName("Get orders for NO auth user")
     @Description("Get orders for No auth user and check answer that code is 401")
 
-    public void orderCanBeGetForAuthUser() {
+    public void orderCantBeGetForNoAuthUser() {
 
         //Получить список заказов
         Response responseGetUserOrders = orderClient.getUserOrders("");

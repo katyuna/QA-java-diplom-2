@@ -11,7 +11,6 @@ import static org.junit.Assert.assertFalse;
 
 public class GetUsersOrdersNoAuthTest {
 
-
     //Создать userClient
     private UserClient userClient = new UserClient();
 

@@ -4,13 +4,11 @@ import io.qameta.allure.Step;
 import io.restassured.response.Response;
 import stellarburgers.api.model.Ingredients;
 
-import java.util.ArrayList;
-
 import static io.restassured.RestAssured.given;
 
 public class OrderClient extends RestClient {
 
-    public final String PATH = BASE_URL + "orders";
+    public final String ORDERS_PATH = BASE_URL + "orders";
 
     //Получение данных об ингридиентах
     @Step("Get ingredients")
@@ -29,7 +27,7 @@ public class OrderClient extends RestClient {
                 .and()
                 .body(ingredients)
                 .when()
-                .post(PATH);
+                .post(ORDERS_PATH);
     }
 
     //Получение заказов конкретного пользователя
@@ -38,6 +36,6 @@ public class OrderClient extends RestClient {
         return given()
                 .spec(getBaseSpec())
                 .auth().oauth2(token)
-                .get(PATH);
+                .get(ORDERS_PATH);
     }
 }

@@ -11,7 +11,7 @@ import static io.restassured.RestAssured.given;
 //Выносим общую часть URL в отдельный класс RestClient и наследуем от него класс UserClient
 public class UserClient extends RestClient{
 
-    public final String PATH = BASE_URL+"auth/";  //URL
+    public final String USER_PATH = BASE_URL+"auth/";  //URL
 
     //Регистрация
     @Step("Create user")
@@ -22,7 +22,7 @@ public class UserClient extends RestClient{
                 .and()
                 .body(user)
                 .when()
-                .post(PATH+"register");
+                .post(USER_PATH+"register");
     }
 
    //Авторизация
@@ -34,7 +34,7 @@ public class UserClient extends RestClient{
                 .and()
                 .body(userCredentials)
                 .when()
-                .post(PATH+"login");
+                .post(USER_PATH+"login");
     }
 
     //Получение данных пользователя
@@ -43,7 +43,7 @@ public class UserClient extends RestClient{
         return given()
                 .spec(getBaseSpec())
                 .auth().oauth2(token)
-                .get(PATH+"user");
+                .get(USER_PATH+"user");
     }
 
     //Обновлпение данных пользователя с авторизацией
@@ -55,6 +55,6 @@ public class UserClient extends RestClient{
                 .and()
                 .body(user)
                 .when()
-                .patch(PATH+"user");
+                .patch(USER_PATH+"user");
     }
 }

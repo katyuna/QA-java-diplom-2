@@ -10,14 +10,6 @@ public class OrderClient extends RestClient {
 
     public final String ORDERS_PATH = BASE_URL + "orders";
 
-    //Получение данных об ингридиентах
-    @Step("Get ingredients")
-    public Response getIngredients(String token) {
-        return given()
-                .spec(getBaseSpec())
-                .auth().oauth2(token)
-                .get(BASE_URL + "ingredients");
-    }
     //Создание заказа
     @Step("Create order")
     public Response createOrder(String token, Ingredients ingredients) {

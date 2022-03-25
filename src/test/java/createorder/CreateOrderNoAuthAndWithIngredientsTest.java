@@ -4,6 +4,7 @@ import io.qameta.allure.Description;
 import io.qameta.allure.junit4.DisplayName;
 import io.restassured.response.Response;
 import org.junit.Test;
+import stellarburgers.api.IngredientsClient;
 import stellarburgers.api.OrderClient;
 import stellarburgers.api.UserClient;
 import stellarburgers.api.model.Ingredients;
@@ -18,9 +19,10 @@ public class CreateOrderNoAuthAndWithIngredientsTest {
 
     //Создать userClient
     private UserClient userClient = new UserClient();
-
     //Создать orderClient
     private OrderClient orderClient = new OrderClient();
+    //Создать ingrediensClient
+    private IngredientsClient ingredientsClient = new IngredientsClient();
 
     @Test
     @DisplayName("Create order without auth")
@@ -42,7 +44,7 @@ public class CreateOrderNoAuthAndWithIngredientsTest {
         String clearToken = token.replace("Bearer ", "");
 
         //Получить список ингридиентов
-        Response responseGetIngredients = orderClient.getIngredients(clearToken);
+        Response responseGetIngredients = ingredientsClient.getIngredients(clearToken);
         ArrayList <String> ingredients = responseGetIngredients
                 .then()
                 .extract()
